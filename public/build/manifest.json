@@ -1,0 +1,52 @@
+{
+  "resources/css/admin/datatables/datatables.css": {
+    "file": "css/datatables.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/datatables/datatables.css"
+  },
+  "resources/css/admin/filepond/filepond-plugin-image-preview.css": {
+    "file": "css/filepond-plugin-image-preview.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/filepond/filepond-plugin-image-preview.css"
+  },
+  "resources/css/admin/filepond/filepond.css": {
+    "file": "css/filepond.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/filepond/filepond.css"
+  },
+  "resources/css/admin/sweet-alert/sweetalert.css": {
+    "file": "css/sweetalert.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/sweet-alert/sweetalert.css"
+  },
+  "resources/css/admin/tabler/tabler-flags.css": {
+    "file": "css/tabler-flags.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/tabler/tabler-flags.css"
+  },
+  "resources/css/admin/tabler/tabler-payments.css": {
+    "file": "css/tabler-payments.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/tabler/tabler-payments.css"
+  },
+  "resources/css/admin/tabler/tabler-vendors.css": {
+    "file": "css/tabler-vendors.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/tabler/tabler-vendors.css"
+  },
+  "resources/css/admin/tabler/tabler.css": {
+    "file": "css/tabler.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/tabler/tabler.css"
+  },
+  "resources/css/admin/toastr/toastr.css": {
+    "file": "css/toastr.min.css",
+    "isEntry": true,
+    "src": "resources/css/admin/toastr/toastr.css"
+  },
+  "resources/js/admin/tabler.js": {
+    "file": "js/tabler2.js",
+    "isEntry": true,
+    "src": "resources/js/admin/tabler.js"
+  }
+}
