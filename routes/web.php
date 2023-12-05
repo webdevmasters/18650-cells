@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('admin.dashboard');
+Route::get('/', [HomeController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('/admin/cells', [CellController::class, 'index'])->name('admin.cells.index');
-Route::post('/admin/cells/store', [CellController::class, 'store'])->name('admin.cells.store');
 Route::get('/admin/cells/{id}/edit', [CellController::class, 'edit'])->name('admin.cells.edit');
+
+Route::post('/admin/cells/store', [CellController::class, 'store'])->name('admin.cells.store');
 Route::post('/admin/cells/update', [CellController::class, 'update'])->name('admin.cells.update');
 Route::post('/admin/cells/delete', [CellController::class, 'destroy'])->name('admin.cells.destroy');
 Route::post('/admin/cells/sell/{data}', [CellController::class, 'sell'])->name('admin.cells.sell');

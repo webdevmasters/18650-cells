@@ -1,4 +1,7 @@
 @extends("admin.layouts.master")
+@section('title')
+    Cells
+@endsection
 @section('content')
     <div class="page-body">
         <div class="container-xl">
