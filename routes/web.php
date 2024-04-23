@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('/admin/cells', [CellController::class, 'index'])->name('admin.cells.index');
 Route::get('/admin/cells/{id}/edit', [CellController::class, 'edit'])->name('admin.cells.edit');
+Route::post('/filter_cells', [CellController::class, 'filterCells'])->name('cells.filter');
 
 Route::post('/admin/cells/store', [CellController::class, 'store'])->name('admin.cells.store');
 Route::post('/admin/cells/update', [CellController::class, 'update'])->name('admin.cells.update');

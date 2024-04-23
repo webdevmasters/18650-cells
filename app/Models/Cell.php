@@ -22,4 +22,7 @@ class Cell extends Model
     public function getRemainingCapacityAttribute() {
         return round(($this->tested_capacity/$this->capacity)*100);
     }
+    public function scopeUnsold($q) {
+        return $q->where('sold',0);
+    }
 }

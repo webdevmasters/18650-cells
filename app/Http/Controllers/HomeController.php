@@ -20,6 +20,7 @@ class HomeController extends Controller
             DB::raw('SUM(CASE WHEN sold = 1 THEN 1 ELSE 0 END) as sold_cells'),
             DB::raw('SUM(CASE WHEN sold = 0 THEN 1 ELSE 0 END) as left_cells')
         )
+            ->where('brand', '!=', 'POWERBANK')
             ->groupBy('capacity_range')
             ->orderBy('capacity_range')
             ->get();

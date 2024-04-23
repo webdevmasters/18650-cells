@@ -11,8 +11,54 @@ class CellController extends Controller
 {
     public function index()
     {
-        $cells = Cell::with(['wrapColor', 'ringColor'])->get();
-        return view('admin.cells.index')->with('cells', $cells)->with('models', $cells->sortBy('model')->pluck('model', 'id')->unique());
+        $cells = Cell::with(['wrapColor', 'ringColor'])->orderBy('created_at','desc');
+        return view('admin.cells.index')
+
+            ->with('models', $cells->get()->sortBy('model')->pluck('model', 'id')->unique())
+            ->with('brands', $cells->get()->sortBy('brand')->pluck('brand', 'id')->unique())
+            ->with('cells', $cells->unsold()->get());
+    }
+
+    public function filterCells(Request $request)
+    {
+        // Retrieve input parameters
+        $capacity = $request->input('capacity');
+        $model = $request->input('model');
+        $brand = $request->input('brand');
+        $sold = $request->input('sold');
+
+
+        // Build the query based on selected parameters
+        $query = Cell::query()->with(['wrapColor', 'ringColor']);
+
+        if ($capacity && $capacity !== 'all') {
+            // Extract the range values
+            [$minCapacity, $maxCapacity] = explode('-', $capacity);
+
+            // Use BETWEEN clause for capacity
+            $query->whereBetween('tested_capacity', [$minCapacity, $maxCapacity - 1]);
+        }
+
+        if ($model && $model !== '0') {
+            $query->where('model', $model);
+        }
+
+        if ($brand && $brand !== '0') {
+            $query->where('brand', $brand);
+        }
+
+        if ($sold !== null && $sold !== 'all') {
+            $query->where('sold', $sold);
+        }
+
+        // Get the filtered data
+        $cells = $query->orderBy('tested_capacity')->get();
+
+        $cells_table = view('admin.includes.cells_table')->with('cells', $cells)->render();
+        $model_dropdown = view('admin.includes.model_dropdown')->with('models', $cells->sortBy('model')->pluck('model')->unique())->render();
+
+        // Return the filtered data as a JSON response
+        return response()->json(['cells_table' => $cells_table, 'model_dropdown' => $model_dropdown]);
     }
 
     public function store(CellRequest $request)

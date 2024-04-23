@@ -130,9 +130,9 @@
                             <tfoot>
                             <tr>
                                 <td style="font-weight: bold;color: #c20a19">TOTAL</td>
-                                <td style="font-weight: bold;color: #c20a19">{{ $cellGroups->sum('total_cells') }}</td>
                                 <td style="font-weight: bold;color: #c20a19">{{ $cellGroups->sum('sold_cells') }}</td>
                                 <td style="font-weight: bold;color: #c20a19">{{ $cellGroups->sum('left_cells') }}</td>
+                                <td style="font-weight: bold;color: #c20a19">{{ $cellGroups->sum('total_cells') }}</td>
                             </tr>
                             </tfoot>
                         </table>

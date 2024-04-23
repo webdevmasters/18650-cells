@@ -4,130 +4,56 @@
 @endsection
 @section('content')
     <div class="page-body">
-        <div class="container-xl">
+        <div class="container-xl" style="margin-left: 20px;max-width: 1470px;">
             <div class="row row-deck row-cards">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap  cells_table">
-                                <thead>
-                                <tr>
-                                    <th>Model</th>
-                                    <th>Brand</th>
-                                    <th>Wrap color</th>
-                                    <th>Ring color</th>
-                                    <th>Capacity</th>
-                                    <th>Tested</th>
-                                    <th>Percent</th>
-                                    <th>Resistance</th>
-                                    <th>Current</th>
-                                    <th>Price</th>
-                                    <th>Sold</th>
-                                    <th>Created</th>
-                                    <th>Modified</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                @foreach($cells as $cell)
-                                    <tr>
-                                        <td>{{$cell->model}}</td>
-                                        <td>{{$cell->brand}}</td>
-                                        <td>
-                                            <div class="col-auto">
-                                                <div class="col-12 col-lg-auto" hidden>{{$cell->wrapColor->code}} </div>
-                                                <label class="form-colorinput">
-                                                    <input name="color" type="text" value="{{$cell->wrapColor->code}}" class="form-colorinput-input"/>
-                                                    <span class="form-colorinput-color" style="background-color: {{$cell->wrapColor->code}};width: 60px;border-radius: 10%"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="col-auto">
-                                                <div class="col-12 col-lg-auto" hidden>{{$cell->ringColor->code}} </div>
-                                                <label class="form-colorinput">
-                                                    <input name="color-rounded" type="text" value="{{$cell->ringColor->code}}" class="form-colorinput-input"/>
-                                                    <span class="form-colorinput-color rounded-circle" style="background-color: {{$cell->ringColor->code}}"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>{{$cell->capacity}}</td>
-                                        <td>{{$cell->tested_capacity}}</td>
-                                        <td class="sort-progress" data-progress="{{$cell->remaining_capacity}}">
-                                            <div class="row align-items-center">
-                                                <div class="col-12 col-lg-auto" hidden>{{$cell->remaining_capacity}}%
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress" style="width: 5rem">
-                                                        <div class="progress-bar"
-                                                             style="width: {{$cell->remaining_capacity}}%"
-                                                             role="progressbar"
-                                                             aria-valuenow="{{$cell->remaining_capacity}}"
-                                                             aria-valuemin="0"
-                                                             aria-valuemax="100"
-                                                             aria-label="30% Complete">
-                                                            <span class="visually-hidden"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{$cell->resistance}}</td>
-                                        <td>{{$cell->discharge_current}}</td>
-                                        <td>{{$cell->price}}</td>
-                                        <td>
-                                            <div class="col-12 col-lg-auto" hidden>{{$cell->sold}}%</div>
-                                            <label>
-                                                <input class="form-check-input" type="checkbox" value="{{$cell->sold}}" onclick="sellCell('{{$cell->id}}','{{$cell->sold}}')"
-                                                    @checked($cell->sold)>
-                                            </label>
-                                        </td>
-                                        <td>{{\Carbon\Carbon::parse($cell->created_at)->format('d/m/Y')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($cell->updated_at)->format('d/m/Y')}}</td>
-                                        <td style="text-align: center">
-                                            <ul class="list-unstyled hstack gap-1 mb-0" style="justify-content: center; ">
-                                                <li>
-                                                    <input type="hidden" name="id" id="{{$cell->id}}">
-                                                    <a href="javascript:void(0);" onclick="editCell('{{$cell->id}}')" style="width: 34px; height: 34px" class="btn btn-warning">
-                                                        <i class="fa-solid fa-pen-to-square fa-sm"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <form class="d-inline remove-cell-form" method="post">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <input type="text" name="id" value="{{$cell->id}}" hidden/>
-                                                        <button class="btn btn-danger" style="width: 34px; height: 34px"><i class="fa-solid fa-xmark fa-sm"></i></button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>Model</th>
-                                    <th>Brand</th>
-                                    <th>Wrap color</th>
-                                    <th>Ring color</th>
-                                    <th>Capacity</th>
-                                    <th>Tested capacity</th>
-                                    <th>Percent</th>
-                                    <th>Resistance</th>
-                                    <th>Current</th>
-                                    <th>Price</th>
-                                    <th>Sold</th>
-                                    <th>Created</th>
-                                    <th>Modified</th>
-                                    <th>Action</th>
-                                </tr>
-                                </tfoot>
-                            </table>
+                <div class="col-2" style="padding-right: 20px;">
+                    <form action="./" method="get" autocomplete="off" novalidate>
+                        <div class="subheader mb-2">Capacity</div>
+                        <div>
+                            <select name="capacity" class="form-select">
+                                <option value="all" selected>All</option>
+                                <option value="1000-1200">1000-1200</option>
+                                <option value="1200-1400">1200-1400</option>
+                                <option value="1400-1600">1400-1600</option>
+                                <option value="1600-1800">1600-1800</option>
+                                <option value="1800-2000">1800-2000</option>
+                                <option value="2000-2200">2000-2200</option>
+                                <option value="2200-2400">2200-2400</option>
+                                <option value="2400-2600">2400-2600</option>
+                                <option value="2600-2800">2600-2800</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="subheader mt-2 mb-2">Brand</div>
+                        <div>
+                            <select name="brand" class="form-select">
+                                @foreach($brands as $id => $brand)
+                                    @if($loop->index===0)
+                                        <option value="0">Choose brand</option>
+                                    @endif
+                                    <option value="{{$brand}}">{{$brand}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="subheader mt-2 mb-2">Model</div>
+                        @include('admin.includes.model_dropdown',['models' => $models])
+                        <div class="subheader mt-2 mb-2">Status</div>
+                        <div class="mb-3">
+                            <label class="form-check">
+                                <input type="radio" class="form-check-input" name="status" value="1">
+                                <span class="form-check-label">Sold</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="radio" class="form-check-input" name="status" value="0" checked>
+                                <span class="form-check-label">Available</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="radio" class="form-check-input" name="status" value="all">
+                                <span class="form-check-label">Both</span>
+                            </label>
+                        </div>
+                    </form>
                 </div>
+                @include('admin.includes.cells_table',['cells' => $cells])
             </div>
         </div>
     </div>
@@ -306,6 +232,80 @@
 
             sessionStorage.clear();
 
+            // Attach a change event listener to all select inputs and radio buttons
+            $('select, input[type=radio]').change(function () {
+                // Get the selected values from all inputs
+                let capacity = $('select[name="capacity"]').val();
+                let model = $('select[name="model"]').val();
+                let brand = $('select[name="brand"]').val();
+                let sold = $('input[name="status"]:checked').val();
+
+                // Send AJAX request
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('cells.filter') }}',
+                    data: {
+                        capacity: capacity,
+                        model: model,
+                        brand: brand,
+                        sold: sold,
+                    },
+                    success: function (response) {
+                        // Handle the response here, e.g., update the UI with the filtered data
+                        $('#cells_table').replaceWith(response['cells_table']);
+                        $('#model_dropdown').replaceWith(response['model_dropdown']);
+                        prepareTable();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            prepareTable();
+
+            $('#route').val('create');
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $(".cell_form").on('submit', function (e) {
+                if ($("input[name='route']").val() === 'edit') {
+                    e.preventDefault();
+                    updateCell($(this));
+                } else {
+                    e.preventDefault();
+                    saveCell($(this));
+                }
+            });
+
+            $(".remove-cell-form").submit(function (e) {
+                e.preventDefault();
+                removeCell($(this))
+            });
+
+            $('#modelDropdown').change(function () {
+                findCellById($(this).val())
+            });
+
+            $('#modal-report').on('hidden.bs.modal', function (event) {
+                $(".cell_form").trigger('reset');
+                $(".cell_form").trigger('reset');
+                $('#route').val('create');
+                $('#submitBtn').html('Save');
+                $('.modal-title').html('New cell');
+            });
+
+            $('#modal-report').on('show.bs.modal', function (event) {
+                if ($('#submitBtn').html() === 'Save') $("#modelDropdown").removeClass('d-none');
+                $('.invalid-feedback').remove();
+            });
+        });
+
+        function prepareTable() {
             $('.cells_table').DataTable({
                 "order": [11, 'asc'],
                 initComplete: function () {
@@ -351,47 +351,7 @@
             });
 
             $('.cells_table tfoot tr').appendTo('.cells_table thead');
-
-            $('#route').val('create');
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $(".cell_form").on('submit', function (e) {
-                if ($("input[name='route']").val() === 'edit') {
-                    e.preventDefault();
-                    updateCell($(this));
-                } else {
-                    e.preventDefault();
-                    saveCell($(this));
-                }
-            });
-
-            $(".remove-cell-form").submit(function (e) {
-                e.preventDefault();
-                removeCell($(this))
-            });
-
-            $('#modelDropdown').change(function () {
-                findCellById($(this).val())
-            });
-
-            $('#modal-report').on('hidden.bs.modal', function (event) {
-                $(".cell_form").trigger('reset');
-                $(".cell_form").trigger('reset');
-                $('#route').val('create');
-                $('#submitBtn').html('Save');
-                $('.modal-title').html('New cell');
-            });
-
-            $('#modal-report').on('show.bs.modal', function (event) {
-                if ($('#submitBtn').html() === 'Save') $("#modelDropdown").removeClass('d-none');
-                $('.invalid-feedback').remove();
-            });
-        });
+        }
 
         function sellCell(id, sold) {
             let data = JSON.stringify({
