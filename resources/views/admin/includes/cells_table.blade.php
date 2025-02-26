@@ -75,8 +75,8 @@
                                     @checked($cell->sold)>
                             </label>
                         </td>
-                        <td>{{\Carbon\Carbon::parse($cell->created_at)->format('d/m/Y')}}</td>
-                        <td>{{\Carbon\Carbon::parse($cell->updated_at)->format('d/m/Y')}}</td>
+                        <td>{{ $cell->created_at ? \Carbon\Carbon::parse($cell->created_at)->format('d/m/Y') : '/' }}</td>
+                        <td>{{ $cell->updated_at ? \Carbon\Carbon::parse($cell->updated_at)->format('d/m/Y') : '/' }}</td>
                         <td style="text-align: center">
                             <ul class="list-unstyled hstack gap-1 mb-0" style="justify-content: center; ">
                                 <li>
@@ -86,11 +86,13 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <form class="d-inline remove-cell-form" method="post">
+                                    <form class="remove-cell-form" method="post">
                                         @csrf
-                                        @method('POST')
-                                        <input type="text" name="id" value="{{$cell->id}}" hidden/>
-                                        <button class="btn btn-danger" style="width: 34px; height: 34px"><i class="fa-solid fa-xmark fa-sm"></i></button>
+                                        @method('DELETE') <!-- Match the DELETE request method -->
+                                        <input type="text" name="id" value="{{ $cell->id }}" hidden />
+                                        <button type="submit" class="btn btn-danger" style="width: 34px; height: 34px">
+                                            <i class="fa-solid fa-xmark fa-sm"></i>
+                                        </button>
                                     </form>
                                 </li>
                             </ul>

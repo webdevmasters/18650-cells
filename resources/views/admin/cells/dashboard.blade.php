@@ -8,7 +8,7 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="row row-cards">
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-6 col-lg-2">
                             <div class="card card-sm">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -30,7 +30,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-6 col-lg-2">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <span class="bg-yellow text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                   viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                   stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
+                                                      d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path
+                                                      d="M12 3v3m0 12v3"/>
+                                              </svg>
+                                            </span>
+                                        </div>
+                                        <div class="col">
+                                            <div class="font-weight-medium">{{number_format($batteries, 2)}} Din</div>
+                                            <div class="text-secondary">Batteries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-2">
                             <div class="card card-sm">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -45,8 +67,8 @@
                                             </span>
                                         </div>
                                         <div class="col">
-                                            <div class="font-weight-medium">{{number_format($investment, 2)}} Din</div>
-                                            <div class="text-secondary">Investment</div>
+                                            <div class="font-weight-medium">{{number_format($kp, 2)}} Din</div>
+                                            <div class="text-secondary">KP</div>
                                         </div>
                                     </div>
                                 </div>
@@ -144,28 +166,60 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
-                                        <div class="subheader">Revenue</div>
-                                        <div class="ms-auto lh-1">
-                                            <div class="dropdown">
-                                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="subheader">Revenue in this month</div>
                                     </div>
                                     <div class="d-flex align-items-baseline">
-                                        <div class="h1 mb-0 me-2">$4,300</div>
+                                        <div class="h1 mb-0 me-2">{{number_format($this_month->sum('price'), 2).' din'}}</div>
                                         <div class="me-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          8% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                                            <span class="text-green d-inline-flex align-items-center lh-1">{{$this_month->count().' kom'}}
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
+                                                   viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                   stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
+                                                      d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="chart-revenue-bg" class="chart-sm"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Revenue in last month</div>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <div class="h1 mb-0 me-2">{{number_format($last_month->sum('price'), 2).' din'}}</div>
+                                        <div class="me-auto">
+                                            <span class="text-green d-inline-flex align-items-center lh-1">{{$last_month->count().' kom'}}
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
+                                                   viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                   stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
+                                                      d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="chart-revenue-bg" class="chart-sm"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Revenue in last 3 months</div>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <div class="h1 mb-0 me-2">{{number_format($last_3_months->sum('price'), 2).' din'}}</div>
+                                        <div class="me-auto">
+                        <span class="text-green d-inline-flex align-items-center lh-1">{{$last_3_months->count().' kom'}}
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
-                                                                                    fill="none"/><path
+                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
                                   d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
                         </span>
                                         </div>
@@ -178,28 +232,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
-                                        <div class="subheader">Revenue</div>
-                                        <div class="ms-auto lh-1">
-                                            <div class="dropdown">
-                                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="subheader">Revenue in last 6 months</div>
                                     </div>
                                     <div class="d-flex align-items-baseline">
-                                        <div class="h1 mb-0 me-2">$4,300</div>
+                                        <div class="h1 mb-0 me-2">{{number_format($last_6_months->sum('price'), 2).' din'}}</div>
                                         <div class="me-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          8% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                        <span class="text-green d-inline-flex align-items-center lh-1">{{$last_6_months->count().' kom'}}
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
-                                                                                    fill="none"/><path
+                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
                                   d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
                         </span>
                                         </div>
@@ -214,67 +255,42 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
-                                        <div class="subheader">New clients</div>
-                                        <div class="ms-auto lh-1">
-                                            <div class="dropdown">
-                                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="subheader">Revenue in this year</div>
                                     </div>
                                     <div class="d-flex align-items-baseline">
-                                        <div class="h1 mb-3 me-2">6,782</div>
+                                        <div class="h1 mb-0 me-2">{{number_format($this_year->sum('price'), 2).' din'}}</div>
                                         <div class="me-auto">
-                        <span class="text-yellow d-inline-flex align-items-center lh-1">
-                          0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
+                        <span class="text-green d-inline-flex align-items-center lh-1">{{$this_year->count().' kom'}}
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
-                                                                                    fill="none"/><path d="M5 12l14 0"/></svg>
+                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
+                                  d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
                         </span>
                                         </div>
                                     </div>
-                                    <div id="chart-new-clients" class="chart-sm"></div>
                                 </div>
+                                <div id="chart-revenue-bg" class="chart-sm"></div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-6">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
-                                        <div class="subheader">Active users</div>
-                                        <div class="ms-auto lh-1">
-                                            <div class="dropdown">
-                                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="subheader">Revenue in last year</div>
                                     </div>
                                     <div class="d-flex align-items-baseline">
-                                        <div class="h1 mb-3 me-2">2,986</div>
+                                        <div class="h1 mb-0 me-2">{{number_format($last_year->sum('price'), 2).' din'}}</div>
                                         <div class="me-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                        <span class="text-green d-inline-flex align-items-center lh-1">{{$last_year->count().' kom'}}
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
-                                                                                    fill="none"/><path
+                               stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path
                                   d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
                         </span>
                                         </div>
                                     </div>
-                                    <div id="chart-active-users" class="chart-sm"></div>
                                 </div>
+                                <div id="chart-revenue-bg" class="chart-sm"></div>
                             </div>
                         </div>
                     </div>

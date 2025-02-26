@@ -21,6 +21,9 @@
                                 <option value="2200-2400">2200-2400</option>
                                 <option value="2400-2600">2400-2600</option>
                                 <option value="2600-2800">2600-2800</option>
+                                <option value="2600-2800">2600-2800</option>
+                                <option value="2800-3000">2800-3000</option>
+                                <option value="3000-3200">3000-3200</option>
                             </select>
                         </div>
                         <div class="subheader mt-2 mb-2">Brand</div>
@@ -205,7 +208,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
+            console.log('JavaScript is loaded');
             toastr.options = {
                 closeButton: false,
                 preventDuplicates: true,
@@ -232,14 +235,15 @@
 
             sessionStorage.clear();
 
-            // Attach a change event listener to all select inputs and radio buttons
-            $('select, input[type=radio]').change(function () {
+            let eventSource = '';
+            $(document).on('change', 'select, input[type=radio]', function () {
+                // Determine the source of the event
+                eventSource = $(this).attr('name');
                 // Get the selected values from all inputs
                 let capacity = $('select[name="capacity"]').val();
                 let model = $('select[name="model"]').val();
                 let brand = $('select[name="brand"]').val();
                 let sold = $('input[name="status"]:checked').val();
-
                 // Send AJAX request
                 $.ajax({
                     type: 'POST',
@@ -253,7 +257,10 @@
                     success: function (response) {
                         // Handle the response here, e.g., update the UI with the filtered data
                         $('#cells_table').replaceWith(response['cells_table']);
-                        $('#model_dropdown').replaceWith(response['model_dropdown']);
+                        // Only replace the model dropdown if the event source was not the model dropdown
+                        if (eventSource !== 'model' && eventSource !== 'status') {
+                            $('#model_dropdown').replaceWith(response['model_dropdown']);
+                        }
                         prepareTable();
                     },
                     error: function (xhr, status, error) {
@@ -282,9 +289,10 @@
                 }
             });
 
-            $(".remove-cell-form").submit(function (e) {
-                e.preventDefault();
-                removeCell($(this))
+            $('.remove-cell-form').on('submit', function (e) {
+                e.preventDefault(); // Prevent the form from submitting the traditional way
+                console.log('Form submission intercepted'); // Add a debugging message
+                return false; // Temporarily block all form submissions
             });
 
             $('#modelDropdown').change(function () {
@@ -334,7 +342,7 @@
                 //     "url": "/load/datatables/locale/"
                 // },
                 "autoWidth": false,
-                "columnDefs": [{"visible": false, "targets": [4, 7, 11]},
+                "columnDefs": [{"visible": false, "targets": [4, 7]},
                     {
                         className: "dt-center",
                         targets: [2, 3, 5, 6, 7, 8, 9, 10]
@@ -354,19 +362,27 @@
         }
 
         function sellCell(id, sold) {
-            let data = JSON.stringify({
-                id: id,
-                sold: sold === "1" ? "0" : "1",
-            });
-
             $.ajax({
                 type: "POST",
-                url: '{{url('/admin/cells/sell')}}' + '/' + data,
+                url: '{{url('/admin/cells/sell')}}',
+                data: {
+                    id: id,
+                    capacity: $('select[name="capacity"]').val(),
+                    model: $('select[name="model"]').val(),
+                    brand: $('select[name="brand"]').val(),
+                    status: $('input[name="status"]:checked').val(),
+                    sold: sold === "1" ? "0" : "1",
+                },
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function (response) {
                     if (response['message']) sessionStorage.setItem("message", response['message'])
                     else sessionStorage.setItem("error", response['error'])
-                    location.href = location.href;
+
+                    // Handle the response here, e.g., update the UI with the filtered data
+                    $('#cells_table').replaceWith(response['cells_table']);
+                    $('#model_dropdown').replaceWith(response['model_dropdown']);
+
+                    prepareTable();
                 }
             })
         }
@@ -470,6 +486,7 @@
         }
 
         function removeCell(delete_form) {
+            console.log("usaooooo")
             Swal.fire({
                 title: '@lang('messages.book_remove')',
                 showCancelButton: true,
@@ -480,16 +497,19 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        type: "POST",
-                        url: '{{route('admin.cells.destroy')}}',
+                        type: "DELETE", // Use DELETE instead of POST
+                        url: '{{ route('admin.cells.destroy') }}',
                         data: delete_form.serialize(),
                         success: function (response) {
-                            if (response['message']) sessionStorage.setItem("message", response['message'])
-                            else sessionStorage.setItem("error", response['error'])
+                            console.log("izbrisan")
+                            if (response['message']) sessionStorage.setItem("message", response['message']);
+                            else sessionStorage.setItem("error", response['error']);
                             window.location.reload();
                         },
-                        error: function (xhr, error, response) {
-                            if (response['error']) toastr.error(response['error']).css({"width": "500px"});
+                        error: function (xhr) {
+                            console.log("greska")
+                            const response = JSON.parse(xhr.responseText);
+                            if (response['error']) toastr.error(response['error']).css({ "width": "500px" });
                         },
                     });
                 }
