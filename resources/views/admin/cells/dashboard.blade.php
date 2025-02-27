@@ -160,6 +160,48 @@
                         </table>
                     </div>
                 </div>
+                <div class="col-md-8 col-lg-6">
+                    <div class="card">
+                        <div class="row mb-3">
+                            <div class="card-header col-md-8 col-lg-6">
+                                <h3 class="card-title">Top 10 available cells by model</h3>
+                            </div>
+                            <div class="col-sm-3 col-lg-5 mt-3">
+                                <div class="mb-3">
+                                    <select name="capacity" id="capacitySelect" class="form-select">
+                                        <option value="1000-1200">1000-1200</option>
+                                        <option value="1200-1400">1200-1400</option>
+                                        <option value="1400-1600">1400-1600</option>
+                                        <option value="1600-1800">1600-1800</option>
+                                        <option value="1800-2000">1800-2000</option>
+                                        <option value="2000-2200">2000-2200</option>
+                                        <option value="2200-2400">2200-2400</option>
+                                        <option value="2400-2600">2400-2600</option>
+                                        <option value="2600-2800">2600-2800</option>
+                                        <option value="2800-3000">2800-3000</option>
+                                        <option value="3000-3200">3000-3200</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <table class="table card-table table-vcenter">
+                                <thead>
+                                <tr>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Wrap Color</th>
+                                    <th>Ring Color</th>
+                                    <th>Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody id="unsoldCellsTable">
+                                <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-8 col-lg-6 d-block">
                     <div class="row mb-3">
                         <div class="col-sm-6 col-lg-6">
@@ -204,7 +246,6 @@
                                 <div id="chart-revenue-bg" class="chart-sm"></div>
                             </div>
                         </div>
-
                     </div>
                     <div class="row mb-3">
                         <div class="col-sm-6 col-lg-6">
@@ -295,7 +336,154 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-8 col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top 10 cell models by quantity</h3>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <table  class="table card-table table-vcenter">
+                                <thead>
+                                <tr>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Wrap Color</th>
+                                    <th>Ring Color</th>
+                                    <th>Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody id="topModelsTable">
+                                <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+@endsection
+@section('scripts-bottom')
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Trigger the first option on page load
+            let initialCapacity = $('select[name="capacity"] option:first').val();
+
+            loadTopModels();
+            loadCells(initialCapacity);
+
+            // Handle capacity selection change
+            $('select[name="capacity"]').on('change', function () {
+                let capacity = $(this).val();
+                loadCells(capacity);
+            });
+
+            function loadCells(capacity) {
+                $.ajax({
+                    url: '{{ route('dashboard.cells.filter') }}',
+                    method: 'POST',
+                    data: {capacity: capacity},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        var tableBody = $('#unsoldCellsTable');
+                        tableBody.empty();
+
+                        if (data) {
+                            $.each(data, function (index, cell) {
+                                tableBody.append(`
+                                    <tr>
+                                        <td>${cell.brand}</td>
+                                        <td>${cell.model}</td>
+                                        <td>
+                                            <div class="col-auto">
+                                                <div class="col-12 col-lg-auto" hidden>${cell.wrap_color ?? 'N/A'} </div>
+                                                <label class="form-colorinput">
+                                                    <input name="color" type="text" value="${cell.wrap_color ?? 'N/A'}" class="form-colorinput-input"/>
+                                                    <span class="form-colorinput-color" style="background-color: ${cell.wrap_color ?? 'N/A'};width: 60px;border-radius: 10%"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col-auto">
+                                                <div class="col-12 col-lg-auto" hidden>${cell.ring_color ?? 'N/A'} </div>
+                                                <label class="form-colorinput">
+                                                    <input name="color" type="text" value="${cell.ring_color ?? 'N/A'}" class="form-colorinput-input"/>
+                                                    <span class="form-colorinput-color" style="background-color: ${cell.ring_color ?? 'N/A'};width: 60px;border-radius: 10%"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>${cell.quantity}</td>
+                                    </tr>
+                                `);
+                            });
+                        } else {
+                            tableBody.append(`
+                                <tr>
+                                    <td colspan="5" class="text-center">No cells found for this range</td>
+                                </tr>
+                            `);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred: ' + xhr.responseText);
+                    }
+                });
+            }
+
+            function loadTopModels() {
+                $.ajax({
+                    url: '{{ route('cells.topModels') }}',
+                    method: 'GET',
+                    success: function (data) {
+                        var tableBody = $('#topModelsTable');
+                        tableBody.empty();
+
+                        if (data.length > 0) {
+                            $.each(data, function (index, cell) {
+                                tableBody.append(`
+                            <tr>
+                                <td>${cell.model}</td>
+                                <td>${cell.brand}</td>
+                                <td>
+                                            <div class="col-auto">
+                                                <div class="col-12 col-lg-auto" hidden>${cell.wrap_color ?? 'N/A'} </div>
+                                                <label class="form-colorinput">
+                                                    <input name="color" type="text" value="${cell.wrap_color ?? 'N/A'}" class="form-colorinput-input"/>
+                                                    <span class="form-colorinput-color" style="background-color: ${cell.wrap_color ?? 'N/A'};width: 60px;border-radius: 10%"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col-auto">
+                                                <div class="col-12 col-lg-auto" hidden>${cell.ring_color ?? 'N/A'} </div>
+                                                <label class="form-colorinput">
+                                                    <input name="color" type="text" value="${cell.ring_color ?? 'N/A'}" class="form-colorinput-input"/>
+                                                    <span class="form-colorinput-color" style="background-color: ${cell.ring_color ?? 'N/A'};width: 60px;border-radius: 10%"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                <td>${cell.quantity}</td>
+                            </tr>
+                        `);
+                            });
+                        } else {
+                            tableBody.append(`
+                        <tr>
+                            <td colspan="5" class="text-center">No models found</td>
+                        </tr>
+                    `);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred: ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+    </script>
 @endsection
